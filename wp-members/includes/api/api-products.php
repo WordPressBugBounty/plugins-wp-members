@@ -4,13 +4,13 @@
  * 
  * This file is part of the WP-Members plugin by Chad Butler
  * You can find out more about this plugin at https://rocketgeek.com
- * Copyright (c) 2006-2023  Chad Butler
+ * Copyright (c) 2006-2024  Chad Butler
  * WP-Members(tm) is a trademark of butlerblog.com
  *
  * @package WP-Members
  * @subpackage WP-Members API Functions
  * @author Chad Butler 
- * @copyright 2006-2023
+ * @copyright 2006-2024
  */
 
 /**
@@ -104,7 +104,7 @@ function wpmem_get_products() {
  */
 function wpmem_get_memberships() {
 	global $wpmem;
-	return ( ! empty( $wpmem->membership->products ) ) ? $wpmem->membership->products : false;
+	return ( ! empty( $wpmem->membership->products ) ) ? $wpmem->membership->products : array();
 }
 
 /**
@@ -155,6 +155,18 @@ function wpmem_get_membership_name( $membership_slug ) {
  */
 function wpmem_get_membership_slug( $membership_id ) {
 	return get_post_field( 'post_name', $membership_id );
+}
+
+/**
+ * Get the role required by a membership (if any).
+ * 
+ * @since 3.5.0
+ * 
+ * @param  string  $slug  The membership slug (meta key).
+ */
+function wpmem_get_membership_role( $membership_slug ) {
+	global $wpmem;
+	return ( isset( $wpmem->membership->products[ $membership_slug ]['role'] ) ) ? $wpmem->membership->products[ $membership_slug ]['role'] : '';
 }
 
 /**
@@ -378,4 +390,21 @@ function wpmem_create_membership( $args ) {
 
 	// wp_insert_post() returns post ID on success, WP_Error on fail.
 	return $post_id;
+}
+
+/**
+ * Sets the expiration date for a membership
+ * 
+ * @since 3.5.0
+ * 
+ * @param  string  $product
+ * @param  int     $user_id
+ * @param  mixed   $set_date
+ * @param  mixed   $prev_value
+ * @param  boolean $renew
+ * @return mixed   $new_value
+ */
+function wpmem_generate_membership_expiration_date( $product, $user_id, $set_date = false, $prev_value = false, $renew = false ) {
+	global $wpmem;
+	return $wpmem->membership->set_product_expiration( $product, $user_id, $set_date, $prev_value, $renew );
 }

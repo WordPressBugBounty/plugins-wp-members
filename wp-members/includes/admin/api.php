@@ -4,12 +4,12 @@
  * 
  * This file is part of the WP-Members plugin by Chad Butler
  * You can find out more about this plugin at https://rocketgeek.com
- * Copyright (c) 2006-2023  Chad Butler
+ * Copyright (c) 2006-2024  Chad Butler
  * WP-Members(tm) is a trademark of butlerblog.com
  *
  * @package WP-Members
  * @author Chad Butler
- * @copyright 2006-2023
+ * @copyright 2006-2024
  *
  * Functions included:
  * - wpmem_add_custom_email
@@ -76,7 +76,7 @@ function wpmem_admin_user_profile( $user_id ) {
  * @global object $wpmem The WP_Members Object.
  * @param  string $tab   The plugin tab being displayed.
  * @param  mixed  $args  Array of additional arguments|boolean. Default: false.
- * @return string $url
+ * @return string $url   The escaped admin URL for posting forms.
  */
 function wpmem_admin_form_post_url( $args = false ) {
 	global $wpmem;
