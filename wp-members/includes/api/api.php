@@ -4,13 +4,13 @@
  * 
  * This file is part of the WP-Members plugin by Chad Butler
  * You can find out more about this plugin at https://rocketgeek.com
- * Copyright (c) 2006-2024  Chad Butler
+ * Copyright (c) 2006-2025  Chad Butler
  * WP-Members(tm) is a trademark of butlerblog.com
  *
  * @package WP-Members
  * @subpackage WP-Members API Functions
  * @author Chad Butler 
- * @copyright 2006-2024
+ * @copyright 2006-2025
  */
 
 // Exit if accessed directly.
@@ -648,6 +648,7 @@ function wpmem_is_rest() {
  * Gets registration type.
  *
  * @since 3.3.5
+ * @since 3.5.1 Checks is_reg_type().
  *
  * @global  stdClass  $wpmem
  * @param   string    $type (wpmem|native|add_new|woo|woo_checkout)
@@ -655,7 +656,7 @@ function wpmem_is_rest() {
  */
 function wpmem_is_reg_type( $type ) {
 	global $wpmem;
-	return $wpmem->user->reg_type[ 'is_' . $type ];
+	return $wpmem->user->is_reg_type( $type );
 }
 
 /**

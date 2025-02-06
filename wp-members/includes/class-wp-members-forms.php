@@ -40,6 +40,10 @@ class WP_Members_Forms {
 	function load_fields( $tag = "all", $form = 'default' ) {
 		
 		global $wpmem;
+
+		// @todo Temp fix for admin notification bug.
+		$tag = ( 'admin_notify' == $tag ) ? 'register' : $tag;
+		$tag = ( 'register_wp' == $tag ) ? 'register' : $tag;
 	
 		// Get stored fields settings.
 		$fields = get_option( 'wpmembers_fields' );
@@ -128,9 +132,11 @@ class WP_Members_Forms {
 						$assembled_fields[ $meta_key ]['options']   = array();
 						foreach ( $val[7] as $value ) {
 							$pieces = explode( '|', trim( $value ) );
-							if ( isset( $pieces[1] ) && $pieces[1] != '' ) {
+							// @todo The following originally eliminated an empty option value. However, this 
+							//       is needed for WooCommerce. Check to see if this causes issues elsewhere.
+							//if ( isset( $pieces[1] ) && $pieces[1] != '' ) {
 								$assembled_fields[ $meta_key ]['options'][ $pieces[1] ] = $pieces[0];
-							}
+							//}
 						}
 						break;
 
@@ -2313,4 +2319,5 @@ class WP_Members_Forms {
 	function set_reg_form_showing( $value ) {
 		$this->reg_form_showing = $value;
 	}
+
 } // End of WP_Members_Forms class.
