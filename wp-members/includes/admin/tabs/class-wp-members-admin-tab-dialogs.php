@@ -119,7 +119,7 @@ class WP_Members_Admin_Tab_Dialogs {
 		}
 
 		// Terms of Service.
-		update_option( 'wpmembers_tos', wp_kses( $_POST['dialogs_tos'], 'post' ), false );
+		update_option( 'wpmembers_tos', wp_kses( $_POST['dialogs_tos'], 'post' ) );
 
 		return esc_html__( 'WP-Members dialogs were updated', 'wp-members' );
 	}

@@ -76,7 +76,7 @@ class WP_Members_Admin_Tab_Dropins {
 
 				// If there are any changes, update settings.
 				if ( ! empty( $settings ) ) {
-					update_option( 'wpmembers_dropins', $settings, false );
+					update_option( 'wpmembers_dropins', $settings );
 				} else {
 					// Delete if empty.
 					delete_option( 'wpmembers_dropins' );

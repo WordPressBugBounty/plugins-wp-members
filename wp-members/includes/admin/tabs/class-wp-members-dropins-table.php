@@ -172,7 +172,7 @@ class WP_Members_Dropins_Table extends WP_List_Table {
 					foreach( wpmem_get( 'dropin' ) as $dropin ) {
 						$settings[] = $dropin;
 					}
-					update_option( 'wpmembers_dropins', $settings, false );
+					update_option( 'wpmembers_dropins', $settings, true );
 				} else {
 					delete_option( 'wpmembers_dropins' );
 				}
