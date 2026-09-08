@@ -110,8 +110,8 @@
 	border-width: 0px 1px 1px 1px; 
 }
 #wpmem_user_profile_tabs .ui-state-active {
-	border: 1px solid #006799; 
-	background: #135e96;
+    border: transparent;
+    background: var(--wp-admin-theme-color);
 }
 #wpmem_user_profile_tabs .ui-state-active a {
 	color: #fff;
@@ -154,7 +154,8 @@
 }
 #wpmem-fields .column-profile,
 #wpmem-fields .column-userscrn,
-#wpmem-fields .column-usearch {
+#wpmem-fields .column-usearch,
+#wpmem-fields .column-usersort {
 	width: 62px;
 	padding-left: 0px;
 }
@@ -170,6 +171,17 @@
 #wpmem-fields .column-userscrn input,
 #wpmem-fields .column-usearch input {
 	margin-left: 0px;
+}
+
+/** For membership column */
+.column-wpmem_product{
+	min-width:140px;
+	width: 12%;
+}
+
+.column-dropin_version,
+.column-dropin_enabled {
+	width: 60px;
 }
 
 /** tooltip styles **/

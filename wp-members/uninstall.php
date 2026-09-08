@@ -30,14 +30,14 @@ if ( WP_UNINSTALL_PLUGIN ) {
 	if ( is_multisite() ) {
 
 		global $wpdb;
-		$blog_ids = $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs" );
-		$original_blog_id = get_current_blog_id();
+		$wpmem_blog_ids = get_sites( array( 'fields' => 'ids' ) );
+		$wpmem_orig_blog_id = get_current_blog_id();
 
-		foreach ( $blog_ids as $blog_id ) {
+		foreach ( $wpmem_blog_ids as $blog_id ) {
 			switch_to_blog( $blog_id );
 			wpmem_uninstall_options(); 
 		}
-		switch_to_blog( $original_blog_id );
+		switch_to_blog( $wpmem_orig_blog_id );
 	
 	} else {
 		wpmem_uninstall_options();
@@ -94,7 +94,6 @@ function wpmem_uninstall_options() {
 	delete_option( 'widget_wpmemwidget' );
 
 	// Delete view count transients.
-
 	$transients = $wpdb->get_results( 'SELECT option_name FROM ' . $wpdb->prefix . 'options WHERE option_name LIKE "%_transient_wpmem_user_counts%";' );
 	if ( $transients ) {
 		foreach ( $transients as $transient ) {
@@ -109,6 +108,11 @@ function wpmem_uninstall_options() {
 	// These should not exist following 3.5.0 upgrade, but check them anyway.
 	delete_option( 'wpmembers_install_state' );
 	delete_option( 'wpmem_enable_field_sc' );
+
+	// These should be cleared.
+	delete_option( 'wpmem_dismiss_filesystem_upgrade_notice' );
+	delete_option( 'wpmem_upgrade_filesystem_move_complete' );
+
 	// For pre-3.x settings that may remain.
 	delete_option( 'wpmembers_msurl'  );
 	delete_option( 'wpmembers_regurl' );

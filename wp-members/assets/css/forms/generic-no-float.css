@@ -100,6 +100,7 @@ see https://rocketgeek.com/tips-and-tricks/load-a-custom-stylesheet/
 #wpmem_reg input[type="url"],
 #wpmem_reg input[type="number"],
 #wpmem_reg input[type="date"],
+#wpmem_reg input[type="file"],
 #wpmem_reg textarea,
 #wpmem_login input[type="text"],
 #wpmem_login input[type="password"] {
@@ -121,6 +122,7 @@ see https://rocketgeek.com/tips-and-tricks/load-a-custom-stylesheet/
 	margin: 0px;
 	max-width: 100%;
 	vertical-align: baseline;
+	clear:both;
 }
 
 #wpmem_reg input:focus,

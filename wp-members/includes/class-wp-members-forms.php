@@ -2192,16 +2192,13 @@ class WP_Members_Forms {
 	 * @return string
 	 */
 	function get_tos_link( $field, $tag = 'new' ) {
-		global $wpmem;
-		// Determine if TOS is a WP page or not.
 		$tos_content = stripslashes( get_option( 'wpmembers_tos' ) );
 		if ( has_shortcode( $tos_content, 'wpmem_tos' ) || has_shortcode( $tos_content, 'wp-members' ) ) {	
 			$tos_link_url = do_shortcode( $tos_content );
-			$tos_link_tag = '<a href="' . esc_url( $tos_link_url ) . '" target="_blank">';
 		} else {
-			$tos_link_url = esc_url( add_query_arg( 'tos', 'display' ) );
-			$tos_link_tag = "<a href=\"#\" onClick=\"window.open('" . esc_url( $tos_link_url ) . "','tos');\">";
+			$tos_link_url = add_query_arg( 'tos', 'display', wpmem_current_url( true, false ) );
 		}
+		$tos_link_tag = '<a href="' . esc_url( $tos_link_url ) . '" target="_blank">';
 
 		/**
 		 * Filter the TOS link.

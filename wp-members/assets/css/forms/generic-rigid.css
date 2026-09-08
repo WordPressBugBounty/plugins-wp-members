@@ -128,6 +128,7 @@ see https://rocketgeek.com/tips-and-tricks/load-a-custom-stylesheet/
 	margin: 0px;
 	max-width: 315px;
 	vertical-align: baseline;
+	clear:both;
 }
 
 
