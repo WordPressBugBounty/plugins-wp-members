@@ -128,6 +128,7 @@ class WP_Members_Dialogs {
 			'profile_upload'       => esc_html__( 'Update this file', 'wp-members' ),
 			
 			// Error messages and dialogs.
+			'test_cookie'          => esc_html__( 'Cookies are blocked or not supported by your browser. You must enable cookies to log in.', 'wp-members' ),
 			'login_failed_heading' => esc_html__( 'Login Failed!', 'wp-members' ), // @deprecated 3.4.0
 			'login_failed'         => esc_html__( 'You entered an invalid username or password.', 'wp-members' ),
 			'login_failed_link'    => esc_html__( 'Click here to continue.', 'wp-members' ), // @deprecated 3.4.0

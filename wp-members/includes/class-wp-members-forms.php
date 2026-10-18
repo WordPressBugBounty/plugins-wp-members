@@ -33,7 +33,7 @@ class WP_Members_Forms {
 	 * @since 3.3.0 Added $tag argument.
 	 *
 	 * @global stdClass $wpmem
-	 * @param  string   $tag
+	 * @param  string   $tag  all|register|profile|woo|admin_notify|register_wp
 	 * @param  string   $form The form being generated.
 	 */
 	function load_fields( $tag = "all", $form = 'default' ) {
@@ -42,7 +42,7 @@ class WP_Members_Forms {
 
 		// @todo Temp fix for admin notification bug.
 		$tag = ( 'admin_notify' == $tag ) ? 'register' : $tag;
-		$tag = ( 'register_wp' == $tag ) ? 'register' : $tag;
+		$tag = ( 'register_wp'  == $tag ) ? 'register' : $tag;
 	
 		// Get stored fields settings.
 		$fields = get_option( 'wpmembers_fields' );

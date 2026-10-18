@@ -143,9 +143,10 @@ if ( ! function_exists( 'rktgk_sanitize_array' ) ):
 function rktgk_sanitize_array( $data, $type = 'text' ) {
 	if ( is_array( $data ) ) {
 		foreach( $data as $key => $val ) {
-			//$data[ $key ] = ( 'integer' == $type || 'int' == $type ) ? intval( $val ) : sanitize_text_field( $val );
 			$data[ $key ] = rktgk_sanitize_field( $val, $type );
 		}
+	} else {
+		$data = rktgk_sanitize_field( $data, $type );
 	}
 	return $data;
 }

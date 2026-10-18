@@ -19,20 +19,14 @@ class WP_Members_User_Profile {
 	 *
 	 * @since 3.3.6
 	 *
-	 * @param  string  $tag
+	 * @param  string  $display
+	 * @param  string  $required_capability
 	 * @return array   $fields
 	 */
-	static function get_fields( $tag ) {
+	static function get_fields( $display, $required_capability = 'edit_users' ) {
+		$tag    = ( 'admin' == $display ) ? 'all' : 'profile';
 		$fields = wpmem_fields( $tag );
-		/**
-		 * Filters the required capability for dashboard profile.
-		 * 
-		 * @since 3.5.0
-		 * 
-		 * @param  string  $required_capability
-		 */
-		$required_capability = apply_filters( 'wpmem_user_profile_caps', 'edit_users' );
-		if ( 'profile_dashboard' == $tag && false == current_user_can( $required_capability ) ) {
+		if ( 'profile' == $tag && false == current_user_can( $required_capability ) ) {
 			foreach( $fields as $key => $field ) {
 				if ( false == $field['profile'] ) {
 					unset( $fields[ $key ] );
@@ -84,8 +78,7 @@ class WP_Members_User_Profile {
 		<table class="form-table">
 			<?php
 			// Get fields.
-			// $wpmem_fields = ( 'admin' == $display ) ? self::get_fields( 'profile_admin' ) : self::get_fields( 'profile_dashboard' );
-			$wpmem_fields = ( 'admin' == $display ) ? self::get_fields( 'all' ) : self::get_fields( 'profile' );
+			$wpmem_fields = self::get_fields( $display, $required_capability );
 			// Get excluded meta.
 			$exclude = wpmem_get_excluded_meta( $display . '-profile' );
 		
@@ -188,13 +181,13 @@ class WP_Members_User_Profile {
 								'cols'        => ( isset( $field['cols']        ) ) ? $field['cols']        : false,
 							);	
 						
-							$input = wpmem_form_field( $formfield_args );
+							$input = wpmem_form_field( $formfield_args ); // wpmem_form_field() returns an escaped value.
 						}
 					}
 
 					// Is the field required?
 					$req = ( $field['required'] ) ? ' <span class="description">' . esc_html__( '(required)' ) . '</span>' : '';
-					$label = '<label>' . wpmem_get_field_label( $meta ) . $req . '</label>';
+					$label = '<label>' . wpmem_get_field_label( $meta ) . $req . '</label>'; // wpmem_get_field_label() returns an escaped value.
 					
 					// Build the form rows for filtering.
 					$rows[ $meta ] = array(
@@ -204,9 +197,9 @@ class WP_Members_User_Profile {
 						'values'       => $values,
 						'label_text'   => esc_html__( $field['label'], 'wp-members' ),
 						'row_before'   => '<tr>',
-						'label'        => '<th>' . $label . '</th>',
+						'label'        => '<th>' . $label . '</th>', // output is escaped above.
 						'field_before' => '<td>',
-						'field'        => $input,
+						'field'        => $input, // output is escaped above.
 						'field_after'  => '</td>',
 						'row_after'    => '</tr>',
 					);
@@ -317,21 +310,36 @@ class WP_Members_User_Profile {
 		}
 		
 		global $current_screen, $user_id, $wpmem;
-		// @todo Check this as a possible inclusion for front-end use.
-		$display = ( ! isset( $current_screen ) || is_null( $current_screen ) || 'profile' == $current_screen->base ) ? 'user' : 'admin';
 	
+		// This is a native WP global variable (intentional).
 		if ( ! $user_id ) {
-			$user_id = filter_var( wpmem_get( 'user_id', -1, 'request' ), FILTER_SANITIZE_NUMBER_INT );
+			$user_id = wpmem_get_sanitized( 'user_id', -1, 'request', 'int' );
 			if ( 1 > $user_id ) {
 			// Still no user id? User cannot be updated.
 			return;
 			}
 		}
 
-		// $wpmem_fields = ( 'admin' == $display ) ? self::get_fields( 'profile_admin' ) : self::get_fields( 'profile_dashboard' );
-		$wpmem_fields = ( 'admin' == $display ) ? self::get_fields( 'all' ) : self::get_fields( 'profile' );
+		/** This filter is documented in includes/class-wp-members-user-profile.php */
+		$required_capability = apply_filters( 'wpmem_user_profile_caps', 'edit_users' );
+
+		/*
+		 * The 'user' and 'admin' $display values are for managing the screen view, not the
+		 * role or capability of the user. Capabilities still need to be checked for any actions
+		 * that are only available to admins (i.e. activate user, extend expiration, etc.).
+		 */
+		$display = 'user'; // Default unless capability and screen view pass validation.
+		// Only allow $display to be set to 'admin' if the current user has the required capability (default: edit_users).
+		if ( current_user_can( $required_capability ) ) {
+			if ( isset( $current_screen ) && ! is_null( $current_screen ) && 'user-edit' == $current_screen->base ) {
+				$display = 'admin';
+			}
+		}
+
+		$wpmem_fields = self::get_fields( $display, $required_capability );
 	
 		// Check for password field before exclusions, just in case we are activating a user (otherwise password is removed on user/admin profiles).
+		// @todo Is this no longer used?
 		$chk_pass = ( array_key_exists( 'password', $wpmem_fields ) && true === $wpmem_fields['password']['register'] ) ? true : false;
 	
 		$exclude = wpmem_get_excluded_meta( $display . '-profile' );
@@ -375,7 +383,7 @@ class WP_Members_User_Profile {
 				( isset( $_POST[ $meta ] ) && 'password' != $field['type'] ) ? $fields[ $meta ] = sanitize_text_field( $_POST[ $meta ] ) : false;
 				
 				// For user profile (not admin).
-				if ( 'admin' != $display ) {
+				if ( 'user' == $display ) {
 					// Check for required fields.
 					if ( ! $field['required'] ) {
 						$chk = true;
@@ -410,7 +418,7 @@ class WP_Members_User_Profile {
 		// Handle meta update, skip excluded fields.
 		foreach ( $fields as $key => $val ) {
 			if ( ! in_array( $key, $exclude ) ) {
-				if ( ( 'admin' != $display && true == $chk ) || 'admin' == $display ) {
+				if ( ( 'user' == $display && true == $chk ) || 'admin' == $display ) {
 					update_user_meta( $user_id, $key, $val );
 				}
 			}
@@ -418,13 +426,11 @@ class WP_Members_User_Profile {
 
 		if ( ! empty( $_FILES ) ) {
 			$wpmem->user->upload_user_files( $user_id, $wpmem->fields );
-		}	
+		}
 
-		/** This filter is documented in includes/class-wp-members-user-profile.php */
-		$required_capability = apply_filters( 'wpmem_user_profile_caps', 'edit_users' );
-
-		if ( 'admin' == $display || current_user_can( $required_capability ) ) {
-			if ( $wpmem->mod_reg == 1 ) {
+		// Actions are only available to users with the required capability, regardless of $display value (default: edit_users).
+		if ( current_user_can( $required_capability ) ) {
+			if ( wpmem_is_enabled( 'mod_reg' ) ) {
 
 				$wpmem_activate_user = ( isset( $_POST['activate_user'] ) == '' ) ? -1 : intval( $_POST['activate_user'] );
 
@@ -435,7 +441,7 @@ class WP_Members_User_Profile {
 				}
 			}
 
-			if ( wpmem_is_exp_enabled() && $wpmem->use_exp == 1 ) {
+			if ( wpmem_is_exp_enabled() && wpmem_is_enabled( 'use_exp' ) ) {
 				if ( function_exists( 'wpmem_a_extenduser' ) ) {
 					wpmem_a_extenduser( $user_id );
 				}

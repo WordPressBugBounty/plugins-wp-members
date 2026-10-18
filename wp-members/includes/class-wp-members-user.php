@@ -109,7 +109,16 @@ class WP_Members_User {
 		
 		global $wpmem;
 
+		// Set a cookie now to see if they are supported by the browser.
+		setcookie( TEST_COOKIE, 'WP Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true );
+
+		// Attempt to authenticate the user.
 		$user = wp_signon( array(), is_ssl() );
+
+		// If cookies are disabled, the user can't log in even with a valid username and password.
+		if ( empty( $_COOKIE[ TEST_COOKIE ] ) ) {
+			$user = new WP_Error( 'test_cookie', wpmem_get_text( 'test_cookie' ) );
+		}
 
 		/**
 		 * Adds a hook point to hijack the login process.
@@ -120,19 +129,19 @@ class WP_Members_User {
 		 */
 		$user = apply_filters( 'wpmem_after_wp_signon', $user );
 
+		// If $user is a WP_Error, put the error in the $wpmem->error object and fail.
 		if ( is_wp_error( $user ) ) {
 			$wpmem->error = $user;
 			return "loginfailed";
 		} else {
-			
-			// Make sure current user is set.
-			// @todo Verify that removing this resovles 2 sessions issues per https://wordpress.org/support/topic/creating-multiple-same-sessions-on-login/
-			// wpmem_set_as_logged_in( $user->ID );
-			
+
 			$redirect_to = wpmem_get( 'redirect_to', false );
 			$redirect_to = ( $redirect_to ) ? esc_url_raw( trim( $redirect_to ) ) : esc_url_raw( wpmem_current_url() );
+
+			// This is a native WP hook, so the hook name is not prefixed.
 			/** This filter defined in wp-login.php */
 			$redirect_to = apply_filters( 'login_redirect', $redirect_to, '', $user );
+
 			/**
 			 * Filter the redirect url.
 			 *
@@ -150,7 +159,7 @@ class WP_Members_User {
 			 * @param int    $user->ID    The user's primary key ID.
 			 */
 			$redirect_to = apply_filters( 'wpmem_login_redirect', $redirect_to, $user->ID );
-			wp_safe_redirect( $redirect_to );
+			wp_safe_redirect( $redirect_to ); // URL is sanitized in wp_safe_redirect() with wp_sanitize_redirect().
 			exit();
 		}
 	}
@@ -974,12 +983,19 @@ class WP_Members_User {
 	 * Sets the role for the specified user.
 	 *
 	 * @since 3.2.0
+	 * @since 3.5.8 Cannot set admin role.
 	 *
 	 * @param integer $user_id
 	 * @param string  $role
 	 * @param string  $action (set|add|remove)
 	 */
 	public function update_user_role( $user_id, $role, $action = 'set' ) {
+		
+		// Cannot set admin role using this function.
+		if ( 'administrator' == $role || 'super-admin' == $role ) {
+			return;
+		}
+
 		$user = new WP_User( $user_id );
 		switch ( $action ) {
 			case 'add':
