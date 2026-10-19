@@ -3,7 +3,7 @@ Contributors: cbutlerjr
 Tags: membership, registration, login, authentication, restriction
 Requires at least: 5.9
 Tested up to: 7.1
-Stable tag: 3.5.8
+Stable tag: 3.5.8.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 The original WordPress membership plugin with content restriction, user login, custom registration fields, user profiles, and more.
@@ -107,7 +107,7 @@ The FAQs are maintained at https://rocketgeek.com/plugins/wp-members/docs/faqs/
 
 == Upgrade Notice ==
 
-WP-Members 3.5.8 is a security release. WP-Members 3.5.5 is a feature update release. It fixes some minor bugs and adds new filters and some additional features.  WP-Members 3.5.0 is a major update. See changelog for a list of updates. Minimum WP version is 4.0.
+WP-Members 3.5.8.1 is a bug fix release.  WP-Members 3.5.8 and 3.5.7 are security releases. WP-Members 3.5.0 is a major update. See changelog for a list of updates. Minimum WP version is 4.0.
 
 
 == Screenshots ==
@@ -130,6 +130,10 @@ WP-Members 3.5.8 is a security release. WP-Members 3.5.5 is a feature update rel
 
 
 == Changelog ==
+
+= 3.5.8.1 =
+
+* Removes the login cookie check from 3.5.8.  This was believed to have tested out OK, but introduced errors into some installations.  It will be reviewed for future consideration but is being rolled back for now.
 
 = 3.5.8 =
 

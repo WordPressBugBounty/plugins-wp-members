@@ -109,16 +109,8 @@ class WP_Members_User {
 		
 		global $wpmem;
 
-		// Set a cookie now to see if they are supported by the browser.
-		setcookie( TEST_COOKIE, 'WP Cookie check', 0, COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true );
-
 		// Attempt to authenticate the user.
 		$user = wp_signon( array(), is_ssl() );
-
-		// If cookies are disabled, the user can't log in even with a valid username and password.
-		if ( empty( $_COOKIE[ TEST_COOKIE ] ) ) {
-			$user = new WP_Error( 'test_cookie', wpmem_get_text( 'test_cookie' ) );
-		}
 
 		/**
 		 * Adds a hook point to hijack the login process.
