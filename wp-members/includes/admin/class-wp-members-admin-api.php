@@ -682,7 +682,12 @@ class WP_Members_Admin_API {
 	 * @return array An array of WordPress reserved terms.
 	 */
 	function wp_reserved_terms() {
+		
+		// WordPress reserved terms.
 		$reserved_terms = array( 'attachment', 'attachment_id', 'author', 'author_name', 'calendar', 'cat', 'category', 'category__and', 'category__in', 'category__not_in', 'category_name', 'comments_per_page', 'comments_popup', 'customize_messenger_channel', 'customized', 'cpage', 'day', 'debug', 'error', 'exact', 'feed', 'fields', 'hour', 'link_category', 'm', 'minute', 'monthnum', 'more', 'name', 'nav_menu', 'nonce', 'nopaging', 'offset', 'order', 'orderby', 'p', 'page', 'page_id', 'paged', 'pagename', 'pb', 'perm', 'post', 'post__in', 'post__not_in', 'post_format', 'post_mime_type', 'post_status', 'post_tag', 'post_type', 'posts', 'posts_per_archive_page', 'posts_per_page', 'preview', 'robots', 'role', 's', 'search', 'second', 'sentence', 'showposts', 'static', 'subpost', 'subpost_id', 'tag', 'tag__and', 'tag__in', 'tag__not_in', 'tag_id', 'tag_slug__and', 'tag_slug__in', 'taxonomy', 'tb', 'term', 'theme', 'type', 'w', 'withcomments', 'withoutcomments', 'year' );
+
+		// WP-Members reserved terms.
+		$reserved_terms = array_merge( $reserved_terms, array( 'active', 'exported', 'wpmem_reg_url', 'wpmem_reg_ip', '_wpmem_products', '_wpmem_user_confirmed', '_wpmem_activation_confirm', 'wpmem_user_dir_hash' ) );
 
 		/**
 		 * Filter the array of reserved terms.

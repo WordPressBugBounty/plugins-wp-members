@@ -753,7 +753,8 @@ Last Row|last_row
 				// Error check for reserved terms.
 				$reserved_terms = wpmem_wp_reserved_terms();
 				if ( in_array( strtolower( $add_option ), $reserved_terms ) ) {
-					$add_field_err_msg = sprintf( esc_html__( 'Sorry, "%s" is a <a href="https://codex.wordpress.org/Function_Reference/register_taxonomy#Reserved_Terms" target="_blank">reserved term</a>. Field was not added.', 'wp-members' ), $add_option );
+					/* translators: 1. Meta key that is a reserved term. */
+					$add_field_err_msg = sprintf( __( 'Sorry, "%s" is a reserved term. Field was not added.', 'wp-members' ), $add_option );
 				}
 
 				// Error check option name for spaces and replace with underscores.

@@ -1904,7 +1904,7 @@ class WP_Members_Forms {
 				case( 'multiselect' ):
 				case( 'multicheckbox' ):
 				case( 'radio' ):
-				case( 'membership' );
+				case( 'membership' ):
 					$args['value']   = $field['values'];
 					$args['compare'] = sanitize_text_field( $posted_meta ); // ( isset( $_POST[ $meta_key ] ) ) ? sanitize_text_field( $_POST[ $meta_key ] ) : '';
 					if ( 'multicheckbox' == $field['type'] || 'multiselect' == $field['type'] ) {

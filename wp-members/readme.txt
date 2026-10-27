@@ -3,7 +3,7 @@ Contributors: cbutlerjr
 Tags: membership, registration, login, authentication, restriction
 Requires at least: 5.9
 Tested up to: 7.1
-Stable tag: 3.5.8.1
+Stable tag: 3.5.8.3
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 The original WordPress membership plugin with content restriction, user login, custom registration fields, user profiles, and more.
@@ -130,6 +130,15 @@ WP-Members 3.5.8.1 is a bug fix release.  WP-Members 3.5.8 and 3.5.7 are securit
 
 
 == Changelog ==
+
+= 3.5.8.3 =
+
+* Retag to resolve SVN conflict, no changes
+
+= 3.5.8.2 =
+
+* Fixes a minor bug in WP_Members_Forms::wp_newuser_form() that results in a PHP deprected notice.
+* Adds excluded terms that cannot be used for user meta.
 
 = 3.5.8.1 =
 
